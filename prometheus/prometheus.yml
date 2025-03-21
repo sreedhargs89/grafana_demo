@@ -1,0 +1,46 @@
+# Global configuration
+global:
+  # How frequently to scrape targets by default
+  scrape_interval: 15s
+  # How frequently to evaluate rules
+  evaluation_interval: 15s
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager)
+  external_labels:
+    monitor: 'grafana-demo-monitor'
+
+# Rule files specifies a list of files from which rules are read
+# For this demo, we're not using any rules
+# rule_files:
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# The Node.js application
+scrape_configs:
+  # Job name is added as a label `job=<job_name>` to any timeseries scraped from this config
+  - job_name: 'nodejs-app'
+    
+    # Override the global default and scrape targets from this job every 5 seconds
+    scrape_interval: 5s
+    
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'
+    
+    # Static configs allow you to manually specify targets to scrape
+    static_configs:
+      # The targets are defined as host:port
+      - targets: ['nodejs-app:3000']
+        # Additional labels attached to the time series
+        labels:
+          group: 'production'
+
+  # Scrape configuration for Prometheus itself
+  - job_name: 'prometheus'
+    
+    # Override the global default and scrape targets from this job every 5 seconds
+    scrape_interval: 5s
+    
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          group: 'monitoring'
+
